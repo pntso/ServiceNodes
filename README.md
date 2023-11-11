@@ -239,7 +239,9 @@ Service Nodes include a mechanism for bid plugins, allowing you to define custom
 
 ### Default Bid Behavior
 The service node comes with a default bid plugin that calculates fees based on a YAML configuration file.
-YAML Configuration File Location: `/etc/pantos-offchain-bids.yaml`
+
+**YAML Configuration File Location:** `/etc/pantos-offchain-bids.yaml`
+
 This file contains predefined fees for various blockchain transfer pairs.
 
 ### Plugin Files Location
