@@ -282,7 +282,7 @@ Decide how you want your service node to calculate and accept fees. Consider fac
 - Code your fee calculation and bid acceptance logic in these methods.
 
 #### Activate Your Plugin:
-- Update /etc/pantos-service-node.conf to point to your new plugin.
+- Update `/etc/pantos-service-node.conf` to point to your new plugin.
 - Restart the service node.
 
 Apply your changes by restarting the service node using the command: `sudo systemctl restart pantos-service-node-celery`
