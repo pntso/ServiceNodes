@@ -221,7 +221,7 @@ sudo systemctl start pantos-service-node-celery
 
 > **Remember:** You need at least 100.000 PAN and native coins for each blockchain that you want to serve!
 
-Please reach out to the team if you need help getting the required amounts. 
+Please reach out to the team if you need help getting the required amounts of PAN. 
 
 The log output of the Service Node is then available at
 `/var/log/pantos/service-node.log` for the web server and `/var/log/pantos/service-node-worker.log` for the worker process that asynchronously submits transfer requests to the blockchain networks.
@@ -245,11 +245,11 @@ The service node comes with a default bid plugin that calculates fees based on a
 This file contains predefined fees for various blockchain transfer pairs.
 
 ### Plugin Files Location
-**Base Plugin:** Located at `/opt/pantos/service-node/virtual-environment/lib/python3.10/site-packages/pantos/servicenode/plugins/base.py`. 
+**Base Plugin:** Located at `/opt/pantos/service-node/virtual-environment/lib/python3.10/site-packages/pantos/servicenode/plugins/base.py` 
 
 This file has the abstract BidPlugin class.
 
-**Bids Plugin:** Located at `/opt/pantos/service-node/virtual-environment/lib/python3.10/site-packages/pantos/servicenode/plugins/bids.py`. 
+**Bids Plugin:** Located at `/opt/pantos/service-node/virtual-environment/lib/python3.10/site-packages/pantos/servicenode/plugins/bids.py`
 
 This file contains the default implementation that reads the YAML file.
 
