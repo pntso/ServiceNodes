@@ -199,6 +199,8 @@ blockchains:
         stake: 10000000000000
 ```
 
+### Adapt Pantos-Offchain-Bids.yaml
+
 Each Service Node bid has to be added to the bids list in the configuration section of its source blockchain and contains:
 - execution time in seconds
 - fee for a Pantos transfer in Panini
