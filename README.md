@@ -42,8 +42,12 @@ It will also set up the required users, directories, access rights, databases, a
 **Obtain a Certificate**
 
 Obtain your SSL certificate by running Certbot with the standalone plugin, which will temporarily start a web server on port 80 to perform the domain verification:
+> Stop the Apache server if you are having issues executing this step
+
+`sudo systemctl stop apache2`
 
 `sudo certbot certonly --standalone -d yourdomain.com`
+
 
 Replace yourdomain.com with your actual domain name. You'll need to ensure that port 80 on your server is open and that your DNS settings are correctly configured to point to your server's IP address.
 
@@ -60,8 +64,8 @@ Copy these two files to the appropriate directory, so that the Pantos Service No
 ```
 # Don't forget to adjust your domain name
 
-sudo cp /etc/letsencrypt/live/yourdomain.com/fullchain.pem /etc/pantos/pantos-service-node-fullchain.pem
-sudo cp /etc/letsencrypt/live/yourdomain.com/privkey.pem /etc/pantos/pantos-service-node-privkey.pem
+sudo cp /etc/letsencrypt/live/yourdomain.com/fullchain.pem /etc/pantos-service-node-fullchain.pem
+sudo cp /etc/letsencrypt/live/yourdomain.com/privkey.pem /etc/pantos-service-node-privkey.pem
 ```
 
 ### Automating Certificate Renewal and Deployment
@@ -83,10 +87,10 @@ Create a script that will handle the deployment of the new certificate after ren
 ```#!/bin/bash
 
 DOMAIN="yourdomain.com"
-PANTOS_CERT_PATH="/etc/pantos/pantos-service-node-fullchain.pem"
-PANTOS_KEY_PATH="/etc/pantos/pantos-service-node-privkey.pem"
+PANTOS_CERT_PATH="/etc/pantos-service-node-fullchain.pem"
+PANTOS_KEY_PATH="/etc/pantos-service-node-privkey.pem"
 
-PANTOS_CERT_DIR="/etc/pantos"
+PANTOS_CERT_DIR="/etc"
 
 # Stop the Pantos service before updating certificates
 sudo systemctl stop pantos-service-node-server
@@ -97,10 +101,10 @@ cp "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" "$PANTOS_CERT_PATH"
 cp "/etc/letsencrypt/live/$DOMAIN/privkey.pem" "$PANTOS_KEY_PATH"
 
 # Set permissions
-sudo chown pantos:pantos /etc/pantos-service-node-fullchain.pem
-sudo chown pantos:pantos /etc/pantos-service-node-privkey.pem
-sudo chmod 400 /etc/pantos-service-node-fullchain.pem
-sudo chmod 400 /etc/pantos-service-node-privkey.pem
+sudo chown pantos:pantos /etc-service-node-fullchain.pem
+sudo chown pantos:pantos /etc-service-node-privkey.pem
+sudo chmod 400 /etc-service-node-fullchain.pem
+sudo chmod 400 /etc-service-node-privkey.pem
 
 # Start the Pantos service again
 sudo systemctl start pantos-service-node-server
@@ -148,9 +152,9 @@ You will be prompted to create a passphrase. Keep it safe and remember it, as it
 
 Locate the keystore file created by geth, which is typically located in the directory **~/.ethereum/keystore.** Move this file to the location expected by the Pantos service node:
 ```
-sudo mv ~/.ethereum/keystore/UTC--<timestamp>--<your-address> /etc/pantos/keystore/pantos-service-node.keystore
-sudo chown pantos:pantos /etc/pantos-service-node.keystore
-sudo chmod 400 /etc/pantos-service-node.keystore
+sudo mv ~/.ethereum/keystore/UTC--<timestamp>--<your-address> /etc/keystore/pantos-service-node.keystore
+sudo chown pantos:pantos /etc-service-node.keystore
+sudo chmod 400 /etc-service-node.keystore
 ```
 
 Replace **timestamp** and **your-address** with the actual filename of your keystore file. 
@@ -163,7 +167,7 @@ Now that the SSL certificate and keystore are in place, it's time to configure y
 
 You need to review and adapt the Service Node's configuration file appropriately before starting the Service Node instance:
 
-`sudo nano /etc/pantos-service-node.conf`
+`sudo nano /etc-service-node.conf`
 
 **In particular, make sure that:**
 - the url in the application section matches the domain name of your SSL certificate
@@ -177,7 +181,7 @@ You need to review and adapt the Service Node's configuration file appropriately
 blockchains:
     avalanche:
         active: false
-        private_key: /etc/pantos-service-node.keystore
+        private_key: /etc-service-node.keystore
         private_key_password: ADD-YOUR-PASSWORD
         providers:
             - https://api.avax-test.network/ext/bc/C/rpc
@@ -240,7 +244,7 @@ Service Nodes include a mechanism for bid plugins, allowing you to define custom
 ### Default Bid Behavior
 The service node comes with a default bid plugin that calculates fees based on a YAML configuration file.
 
-**YAML Configuration File Location:** `/etc/pantos-offchain-bids.yaml`
+**YAML Configuration File Location:** `/etc-offchain-bids.yaml`
 
 This file contains predefined fees for various blockchain transfer pairs.
 
@@ -282,7 +286,7 @@ Decide how you want your service node to calculate and accept fees. Consider fac
 - Code your fee calculation and bid acceptance logic in these methods.
 
 #### Activate Your Plugin:
-- Update `/etc/pantos-service-node.conf` to point to your new plugin.
+- Update `/etc-service-node.conf` to point to your new plugin.
 - Restart the service node.
 
 Apply your changes by restarting the service node using the command: `sudo systemctl restart pantos-service-node-celery`
@@ -344,9 +348,9 @@ cd
 
 Then, place the configuration file in its proper location and make it accessible to the pantos user:
 ```
-sudo mv /opt/pantos/service-node/virtual-environment/lib/python3.*/site-packages/pantos/pantos-service-node.conf /etc/pantos-service-node.conf
-sudo chown pantos:pantos /etc/pantos-service-node.conf
-sudo chmod 640 /etc/pantos-service-node.conf
+sudo mv /opt/pantos/service-node/virtual-environment/lib/python3.*/site-packages/pantos/pantos-service-node.conf /etc-service-node.conf
+sudo chown pantos:pantos /etc-service-node.conf
+sudo chmod 640 /etc-service-node.conf
 ```
 
 #### The Service Node also needs its directory for log files:
@@ -361,7 +365,7 @@ Afterwards, follow the steps for obtaining an SSL certificate, web server privat
 #### Finally, run these commands to start your Service Node instance (replace your.server.name with your actual domain name):
 
 ```
-sudo -u pantos bash -c "source /opt/pantos/service-node/virtual-environment/bin/activate; nohup mod_wsgi-express start-server --https-port 8443 --https-only --server-name your.server.name --ssl-certificate-file /etc/pantos-service-node-fullchain.pem --ssl-certificate-key-file /etc/pantos-service-node-privkey.pem /opt/pantos/service-node/wsgi.py >> /var/log/pantos/service-node-mod_wsgi.log 2>&1 &"
+sudo -u pantos bash -c "source /opt/pantos/service-node/virtual-environment/bin/activate; nohup mod_wsgi-express start-server --https-port 8443 --https-only --server-name your.server.name --ssl-certificate-file /etc-service-node-fullchain.pem --ssl-certificate-key-file /etc-service-node-privkey.pem /opt/pantos/service-node/wsgi.py >> /var/log/pantos/service-node-mod_wsgi.log 2>&1 &"
 sudo -u pantos bash -c "source /opt/pantos/service-node/virtual-environment/bin/activate; nohup celery -A pantos.servicenode worker -l INFO -n pantos.servicenode -Q pantos.servicenode >> /var/log/pantos/service-node-celery.log 2>&1 &"
 iptables-nft -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
 ```
