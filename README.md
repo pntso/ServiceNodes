@@ -135,6 +135,7 @@ Save and close the file. Certbot will now execute deploy_cert.sh after each succ
 
 **Install Geth on your server:**
 ```
+sudo apt-get install software-properties-common
 sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt update
 sudo apt install ethereum
@@ -152,7 +153,7 @@ You will be prompted to create a passphrase. Keep it safe and remember it, as it
 
 Locate the keystore file created by geth, which is typically located in the directory **~/.ethereum/keystore.** Move this file to the location expected by the Pantos service node:
 ```
-sudo mv ~/.ethereum/keystore/UTC--<timestamp>--<your-address> /etc/keystore/pantos-service-node.keystore
+sudo mv ~/.ethereum/keystore/UTC--<timestamp>--<your-address> /etc/pantos-service-node.keystore
 sudo chown pantos:pantos /etc/pantos-service-node.keystore
 sudo chmod 400 /etc/pantos-service-node.keystore
 ```
