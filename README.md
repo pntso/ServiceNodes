@@ -21,7 +21,7 @@ Downloading and Installing the Service Node
 
 **Access your server and download the Pantos Service Node package:**
 
-`File will be shared via Telegram, please do not upload it anywhere and only transfer it via a safe connection e.g SFTP/SCP`
+`File will be shared via Telegram, please do not upload it anywhere and only transfer it via an encrypted connection e.g SFTP/SCP`
 
 **Install the Service Node package using the apt package manager (substitute VERSION and REVISION with the actual numbers):**
 
