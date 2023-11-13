@@ -66,6 +66,10 @@ Copy these two files to the appropriate directory, so that the Pantos Service No
 
 sudo cp /etc/letsencrypt/live/yourdomain.com/fullchain.pem /etc/pantos-service-node-fullchain.pem
 sudo cp /etc/letsencrypt/live/yourdomain.com/privkey.pem /etc/pantos-service-node-privkey.pem
+sudo chown pantos:pantos /etc/pantos-service-node-fullchain.pem
+sudo chown pantos:pantos /etc/pantos-service-node-privkey.pem
+sudo chmod 400 /etc/pantos-service-node-fullchain.pem
+sudo chmod 400 /etc/pantos-service-node-privkey.pem
 ```
 
 ### Automating Certificate Renewal and Deployment
